@@ -1,4 +1,4 @@
-![viivue-team](https://user-images.githubusercontent.com/14942380/174687345-d46fa50f-509e-4cd2-bbb6-f0a013565a24.png)
+![viivue-team](https://user-images.githubusercontent.com/14942380/174688504-f7437fbf-09f1-4886-ad50-8d93c4b265be.png)
 
 > ### Specializes in creating impactful websites and ecommerce with personality and drive results for forward-thinking businesses ![vii-heart](https://user-images.githubusercontent.com/14942380/174686415-073b8f05-5ae5-4033-b1fb-9fde0b83804b.gif)
   
