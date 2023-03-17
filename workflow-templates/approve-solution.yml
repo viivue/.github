@@ -1,0 +1,54 @@
+# Approve solution v0.0.0
+# Automation:
+#   on label added
+#      if found label FE_APPROVED_LABEL and BE_APPROVED_LABEL
+#          => replace with label APPROVED_LABEL
+#          => move to DESIGNATED_STATUS column
+
+name: Approve solution v0.0.0
+
+env:
+  FE_APPROVED_LABEL: "solution: FE approved"
+  BE_APPROVED_LABEL: "solution: BE approved"
+  APPROVED_LABEL: "solution: approved"
+  REQUIRE_APPROVAL_LABEL: "solution: require approval"
+  DESIGNATED_STATUS: "Todo"
+  ORGANIZATION: viivue
+  PROJECT_TOKEN: ${{ secrets.PROJECT_TOKEN }}
+  PROJECT_ID: ${{ vars.PROJECT_ID }}
+
+on:
+  issues:
+    types: [ labeled ]
+
+jobs:
+  approve_solution:
+    name: Approve solution
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checking if this solution been approved by team lead
+        if: ${{ contains(github.event.issue.labels.*.name, env.FE_APPROVED_LABEL) && contains(github.event.issue.labels.*.name, env.BE_APPROVED_LABEL) }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_URL: ${{ github.event.issue.html_url }}
+        run: |
+          echo "Issue approved ✅"
+          echo ""
+          gh issue edit $ISSUE_URL --remove-label "$FE_APPROVED_LABEL"
+          gh issue edit $ISSUE_URL --remove-label "$BE_APPROVED_LABEL"
+          gh issue edit $ISSUE_URL --remove-label "$REQUIRE_APPROVAL_LABEL"
+          echo 'Remove label "${{ env.FE_APPROVED_LABEL }}", "${{ env.BE_APPROVED_LABEL }}" and "${{ env.REQUIRE_APPROVAL_LABEL }}".'
+          echo ""
+          gh issue edit $ISSUE_URL --add-label "$APPROVED_LABEL"
+          echo 'Label "${{ env.APPROVED_LABEL }}" has been added'
+
+      - name: Change card status to "${{ env.DESIGNATED_STATUS }}"
+        if: ${{ contains(github.event.issue.labels.*.name, env.FE_APPROVED_LABEL) && contains(github.event.issue.labels.*.name, env.BE_APPROVED_LABEL) }}
+        uses: leonsteinhaeuser/project-beta-automations@v2.1.0
+        with:
+          gh_token: ${{ env.PROJECT_TOKEN }}
+          #user: ${{ env.user }}
+          organization: ${{ env.ORGANIZATION }}
+          project_id: ${{ env.PROJECT_ID }}
+          resource_node_id: ${{ github.event.issue.node_id }}
+          status_value: ${{ env.DESIGNATED_STATUS }}
