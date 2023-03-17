@@ -1,8 +1,0 @@
-{
-  "name": "Approve solution v0.0.0",
-  "description": "Checking if this solution been approved by team lead, then update labels and status.",
-  "iconName": "light-bulb",
-  "categories": [
-    "Automation"
-  ]
-}
